@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "617821618725",
+    "project_id": "hr360-91796",
+    "storage_bucket": "hr360-91796.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:617821618725:android:65c8196f4244ea139cf5cc",
+        "android_client_info": {
+          "package_name": "com.example.hr360"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCiRHL2UYdJfhxLVRPMQz7BYuU6fQ6osyE"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
