@@ -1,4 +1,7 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
+import 'package:hr360/Dashboards/empDash.dart';
 import 'package:hr360/Screens/signupPage.dart';
 import 'package:hr360/Services/Firebase/authServices.dart';
 import 'package:hr360/Widgets/customWidgets.dart';
@@ -23,27 +26,32 @@ class _LoginPageState extends State<LoginPage> {
 
     // Call Login method from Auth Services....
 
-    String? result = await _authservices.login(
+    final user = await _authservices.login(
       email: emailController.text,
       password: passController.text,
     );
     setState(() {
       isLoading = false;
     });
+    final result = await _authservices.fetchUserRole(user!.uid);
+    final name = await _authservices.getUserName(user.uid);
 
-    if (result == "HR") {
+    if (result == "HR" && kIsWeb) {
       ScaffoldMessenger.of(
-        context, 
+        context,
       ).showSnackBar(SnackBar(content: Text("Welcome HR")));
       Navigator.pushReplacementNamed(context, '/hr');
-    }
-    else if (result == "Employee") {
-      Navigator.pushReplacementNamed(context, '/emp');
-    }
-    else if (result == "Manager") {
-      ScaffoldMessenger.of(
-        context, 
-      ).showSnackBar(SnackBar(content: Text("Welcome HR")));
+    } else if (result == "Employee") {
+      Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (context) => EmpDash(empId: user.uid, empName: name!),
+        ),
+      );
+    } else if (result == "Manager") {
+      // ScaffoldMessenger.of(
+      //   context,
+      // ).showSnackBar(SnackBar(content: Text("Welcome HR")));
       Navigator.pushReplacementNamed(context, '/mngr');
     }
   }
@@ -52,12 +60,24 @@ class _LoginPageState extends State<LoginPage> {
   Widget build(BuildContext context) {
     return SafeArea(
       child: Scaffold(
+        backgroundColor: Colors.white,
         body: SingleChildScrollView(
           child: Center(
             child: Form(
               child: Column(
                 children: [
-                  Image.asset("Assets/Images/login.jpg"),
+                  Image.asset(
+                    "Assets/Images/login.jpg",
+                    width: MediaQuery.sizeOf(context).width / 3,
+                  ),
+                  Text(
+                    "Login",
+                    style: GoogleFonts.manrope(
+                      fontSize: 30,
+                      fontWeight: FontWeight.w700,
+                      color: Colors.black87,
+                    ),
+                  ),
                   SizedBox(height: 30),
                   CustomTextForm(
                     hntTxt: "E-Mail",
@@ -80,7 +100,7 @@ class _LoginPageState extends State<LoginPage> {
                   Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 20),
                     child: Row(
-                      mainAxisAlignment: MainAxisAlignment.end,
+                      mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         Text("Don't have an Account ??"),
                         SizedBox(width: 5),

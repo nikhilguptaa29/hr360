@@ -1,3 +1,4 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:hr360/Services/Firebase/authServices.dart';
 import 'package:hr360/Widgets/customWidgets.dart';
@@ -22,13 +23,13 @@ class _SignupPageState extends State<SignupPage> {
   void _signup() async {
     // Now Call signup method from AuthServices
 
-    String? result = await _authservices.signup(
+    User? result = await _authservices.signup(
       name: nameController.text,
       email: emailController.text,
       password: passController.text,
       role: selectedValue!,
     );
-    if (result == null) {
+    if (result != null) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           content: Text(
@@ -37,17 +38,14 @@ class _SignupPageState extends State<SignupPage> {
         ),
       );
       Navigator.pushReplacementNamed(context, '/login');
-    }
-    else
-    {
+    } else {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-          content: Text(
-            "Signup Failed... $result",
-          ),
+          content: Text("Signup Failed... $result"),
+          duration: Duration(seconds: 10),
         ),
       );
-    } 
+    }
   }
 
   // TextEditingController roleController = TextEditingController();
@@ -93,7 +91,7 @@ class _SignupPageState extends State<SignupPage> {
                   hntTxt: "Password",
                   lblTxt: "Password",
                   icon: Icon(Icons.person),
-                  isPass: false,
+                  isPass: true,
                   controller: passController,
                 ),
                 SizedBox(height: 10),
@@ -116,8 +114,8 @@ class _SignupPageState extends State<SignupPage> {
                     items:
                         role.map((role) {
                           return DropdownMenuItem(
-                            child: Text(role),
                             value: role,
+                            child: Text(role),
                           );
                         }).toList(),
                     onChanged: (value) {
@@ -128,7 +126,7 @@ class _SignupPageState extends State<SignupPage> {
                   ),
                 ),
                 SizedBox(height: 20),
-                CustButton(func: _signup  , btnTxt: "Sign Up"),
+                CustButton(func: _signup, btnTxt: "Sign Up"),
                 // Sized
                 Padding(
                   padding: const EdgeInsets.only(right: 35.0, top: 10),

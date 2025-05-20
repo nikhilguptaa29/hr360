@@ -16,7 +16,7 @@ void main() async {
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
 
-  @override 
+  @override
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
@@ -24,10 +24,10 @@ class MyApp extends StatelessWidget {
         '/login': (context) => LoginPage(),
         '/signup': (context) => SignupPage(),
         '/hr': (context) => HrDash(),
-        '/emp': (context) => EmpDash(),
+        '/emp': (context) => EmpDash(empName: '', empId: ''),
         '/mngr': (context) => ManagerDash(),
       },
-      initialRoute: '/login',
+      initialRoute: '/hr',
     );
   }
 }

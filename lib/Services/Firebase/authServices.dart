@@ -8,7 +8,7 @@ class Authservices {
   // Creating the instance for Firestore
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
 
-  Future<String?> signup({
+  Future<User?> signup({
     required String name,
     required String email,
     required String password,
@@ -23,19 +23,13 @@ class Authservices {
           .doc(userCredential.user!.uid)
           .set({'Name': name.trim(), 'Email': email.trim(), 'Role': role});
 
-      return null;
+      return userCredential.user;
     } catch (e) {
-      if (e.toString() == "Weak Password") {
-        return "Your password is too weak";
-      }
-      return e.toString();
+      throw Exception("Signup Failed : $e");
     }
   }
 
-  Future<String?> login({
-    required String email,
-    required String password,
-  }) async {
+  Future<User?> login({required String email, required String password}) async {
     try {
       UserCredential userCredential = await _auth.signInWithEmailAndPassword(
         email: email,
@@ -49,17 +43,32 @@ class Authservices {
               .collection("Employees")
               .doc(userCredential.user!.uid)
               .get();
-      return userDoc['Role'];
+      return userCredential.user;
     } catch (e) {
-      return e.toString();
+      throw Exception("Login Failed : $e");
     }
+  }
+
+  Future<String?> fetchUserRole(String userId) async {
+    DocumentSnapshot snapshot =
+        await _firestore.collection("Employees").doc(userId).get();
+    return snapshot.get('Role');
+  }
+
+  Future<String?> getUserName(String userId) async {
+    DocumentSnapshot snapshot =
+        await _firestore.collection("Employees").doc(userId).get();
+    return snapshot.get('Name');
+  }
+  User? getCurrentUser(){
+    return _auth.currentUser;
   }
 
   Future<void> signOut() async {
     try {
       await FirebaseAuth.instance.signOut();
     } catch (e) {
-      return null;
+      return;
     }
   }
 }
